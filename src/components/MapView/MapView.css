@@ -1,0 +1,8 @@
+.map-view {
+	height: 100vh;
+	width: 100vw;
+}
+
+.svg-overlay {
+	fill: white;
+}

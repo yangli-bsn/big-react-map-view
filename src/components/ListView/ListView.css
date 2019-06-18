@@ -1,0 +1,14 @@
+.list-view {
+	height: 100vh;
+	width: 20vw;
+	background-color: #FAFAFA;
+}
+
+.controller-list-item {
+	border: 1px solid;
+	margin: 10px;
+	height: 10vh;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 5px 5px 5px grey;
+}
