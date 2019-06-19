@@ -1,0 +1,369 @@
+{
+    "version": 8,
+    "name": "Monochrome",
+    "metadata": {
+        "mapbox:type": "default",
+        "mapbox:origin": "light-v10",
+        "mapbox:autocomposite": true,
+        "mapbox:groups": {
+            "Road network, labels": {
+                "name": "Road network, labels",
+                "collapsed": true
+            },
+            "Road network, bridges": {
+                "name": "Road network, bridges",
+                "collapsed": true
+            },
+            "Road network, tunnels": {
+                "name": "Road network, tunnels",
+                "collapsed": true
+            },
+            "Buildings, built": {"name": "Buildings, built", "collapsed": true},
+            "Road network, surface": {
+                "name": "Road network, surface",
+                "collapsed": true
+            },
+            "Transit labels": {"name": "Transit labels", "collapsed": true},
+            "Base, land": {"name": "Base, land", "collapsed": true},
+            "Base, water": {"name": "Base, water", "collapsed": true},
+            "Natural labels": {"name": "Natural labels", "collapsed": true},
+            "Place labels": {"name": "Place labels", "collapsed": false},
+            "Base, built": {"name": "Base, built", "collapsed": false},
+            "Administrative boundaries": {
+                "name": "Administrative boundaries",
+                "collapsed": true
+            },
+            "Point of interest labels": {
+                "name": "Point of interest labels",
+                "collapsed": false
+            }
+        },
+        "mapbox:propConfigToc": {
+            "propConfig": {
+                "buildings": {"houseNumbers": false},
+                "base": {"landuseLandcoverStyle": "simple"},
+                "natural-labels": {"labelStyle": "Text only", "density": 1},
+                "point-of-interest-labels": {
+                    "labelStyle": "Text only",
+                    "density": 1
+                },
+                "road-network": {
+                    "highwayStyle": "Simple",
+                    "shields": false,
+                    "aerialways": false,
+                    "pathStyle": "Simple",
+                    "levelCrossings": false,
+                    "oneWayArrows": false,
+                    "railwayStyle": "Solid",
+                    "exits": false,
+                    "polygonFeatures": false,
+                    "ferries": false
+                },
+                "transit-labels": {
+                    "transitLabelStyle": "Text only",
+                    "transit": false
+                },
+                "__global__": {
+                    "color-scheme": "monochrome",
+                    "monochrome-base": "hsl(210, 75%, 99%)"
+                }
+            },
+            "components": [
+                {"propConfig": {}, "components": [], "id": "base"},
+                {"propConfig": {}, "components": [], "id": "buildings"},
+                {"propConfig": {}, "components": [], "id": "road-network"},
+                {"propConfig": {}, "components": [], "id": "admin-boundaries"},
+                {"propConfig": {}, "components": [], "id": "natural-labels"},
+                {
+                    "propConfig": {},
+                    "components": [],
+                    "id": "point-of-interest-labels"
+                },
+                {"propConfig": {}, "components": [], "id": "transit-labels"},
+                {"propConfig": {}, "components": [], "id": "place-labels"}
+            ],
+            "id": "monochrome-v1"
+        },
+        "mapbox:sdk-support": {
+            "js": "0.54.0",
+            "android": "6.7.0",
+            "ios": "4.7.0"
+        }
+    },
+    "center": [-84.44123070382034, 42.38545549518827],
+    "zoom": 1.6238814695554677,
+    "bearing": 0,
+    "pitch": 0,
+    "sources": {
+        "composite": {
+            "url": "mapbox://mapbox.mapbox-streets-v8",
+            "type": "vector"
+        }
+    },
+    "sprite": "mapbox://sprites/yangli-bsn/cjx0vo1lk44z81cmbfpbz6u74/4pweuijqru4t4z7j6v4lrznhg",
+    "glyphs": "mapbox://fonts/yangli-bsn/{fontstack}/{range}.pbf",
+    "layers": [
+        {
+            "id": "land",
+            "type": "background",
+            "metadata": {
+                "mapbox:featureComponent": "base",
+                "mapbox:group": "Base, land"
+            },
+            "layout": {},
+            "paint": {"background-color": "#d3d3d3"}
+        },
+        {
+            "id": "waterway",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "base",
+                "mapbox:group": "Base, water"
+            },
+            "source": "composite",
+            "source-layer": "waterway",
+            "minzoom": 8,
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 11, "round"],
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "#aadaff",
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.3],
+                    ["zoom"],
+                    9,
+                    ["match", ["get", "class"], ["canal", "river"], 0.1, 0],
+                    20,
+                    ["match", ["get", "class"], ["canal", "river"], 8, 3]
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    8,
+                    0,
+                    8.5,
+                    1
+                ]
+            }
+        },
+        {
+            "id": "water",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "base",
+                "mapbox:group": "Base, water"
+            },
+            "source": "composite",
+            "source-layer": "water",
+            "layout": {},
+            "paint": {"fill-color": "#aadaff"}
+        },
+        {
+            "id": "admin-1-boundary-bg",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "admin-boundaries",
+                "mapbox:group": "Administrative boundaries"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "filter": [
+                "all",
+                ["==", ["get", "admin_level"], 1],
+                ["==", ["get", "maritime"], "false"],
+                ["match", ["get", "worldview"], ["all", "US"], true, false]
+            ],
+            "layout": {"line-join": "bevel"},
+            "paint": {
+                "line-color": "hsl(210, 0%, 100%)",
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    7,
+                    3.75,
+                    12,
+                    5.5
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    7,
+                    0,
+                    8,
+                    0.75
+                ],
+                "line-dasharray": [1, 0],
+                "line-translate": [0, 0],
+                "line-blur": ["interpolate", ["linear"], ["zoom"], 3, 0, 8, 3]
+            }
+        },
+        {
+            "id": "admin-0-boundary-bg",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "admin-boundaries",
+                "mapbox:group": "Administrative boundaries"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "minzoom": 1,
+            "filter": [
+                "all",
+                ["==", ["get", "admin_level"], 0],
+                ["==", ["get", "maritime"], "false"],
+                ["match", ["get", "worldview"], ["all", "US"], true, false]
+            ],
+            "layout": {},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    3,
+                    3.5,
+                    10,
+                    8
+                ],
+                "line-color": "hsl(210, 0%, 100%)",
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    3,
+                    0,
+                    4,
+                    0.5
+                ],
+                "line-translate": [0, 0],
+                "line-blur": ["interpolate", ["linear"], ["zoom"], 3, 0, 10, 2]
+            }
+        },
+        {
+            "id": "admin-1-boundary",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "admin-boundaries",
+                "mapbox:group": "Administrative boundaries"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "filter": [
+                "all",
+                ["==", ["get", "admin_level"], 1],
+                ["==", ["get", "maritime"], "false"],
+                ["match", ["get", "worldview"], ["all", "US"], true, false]
+            ],
+            "layout": {"line-join": "round", "line-cap": "round"},
+            "paint": {
+                "line-dasharray": [
+                    "step",
+                    ["zoom"],
+                    ["literal", [2, 0]],
+                    7,
+                    ["literal", [2, 2, 6, 2]]
+                ],
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    7,
+                    0.75,
+                    12,
+                    1.5
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    2,
+                    0,
+                    3,
+                    1
+                ],
+                "line-color": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    3,
+                    "hsl(210, 0%, 100%)",
+                    7,
+                    "hsl(210, 0%, 100%)"
+                ]
+            }
+        },
+        {
+            "id": "admin-0-boundary",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "admin-boundaries",
+                "mapbox:group": "Administrative boundaries"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "minzoom": 1,
+            "filter": [
+                "all",
+                ["==", ["get", "admin_level"], 0],
+                ["==", ["get", "disputed"], "false"],
+                ["==", ["get", "maritime"], "false"],
+                ["match", ["get", "worldview"], ["all", "US"], true, false]
+            ],
+            "layout": {"line-join": "round", "line-cap": "round"},
+            "paint": {
+                "line-color": "hsl(210, 0%, 100%)",
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    3,
+                    0.5,
+                    10,
+                    2
+                ]
+            }
+        },
+        {
+            "id": "admin-0-boundary-disputed",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "admin-boundaries",
+                "mapbox:group": "Administrative boundaries"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "minzoom": 1,
+            "filter": [
+                "all",
+                ["==", ["get", "disputed"], "true"],
+                ["==", ["get", "admin_level"], 0],
+                ["==", ["get", "maritime"], "false"],
+                ["match", ["get", "worldview"], ["all", "US"], true, false]
+            ],
+            "layout": {"line-join": "round"},
+            "paint": {
+                "line-dasharray": [1.5, 1.5],
+                "line-color": "#ffffff",
+                "line-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    3,
+                    0.5,
+                    10,
+                    2
+                ]
+            }
+        }
+    ],
+    "created": "2019-06-17T21:15:25.344Z",
+    "id": "cjx0vo1lk44z81cmbfpbz6u74",
+    "modified": "2019-06-19T22:37:31.441Z",
+    "owner": "yangli-bsn",
+    "visibility": "private",
+    "draft": false
+}

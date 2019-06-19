@@ -1,102 +1,107 @@
 import React, { Component } from 'react';
 import ReactMapGL from 'react-map-gl';
-import WebMercatorViewport from 'viewport-mercator-project';
 
-import {SVGOverlay, BaseControl} from 'react-map-gl';
+import {fromJS} from 'immutable';
+
+import { SVGOverlay, BaseControl, Marker } from 'react-map-gl';
+import MapStyle from 'data/style.json';
+import { dataLayer } from 'data/dataLayer';
+
+import CustomMarker from './CustomMarker';
+import Cluster from './Cluster';
+
+import CountryFilter from 'util/CountryFilter';
+import FilterGeoByCountry from 'util/FilterGeoByCountry';
+import worldMap from 'data/custom.geo.json';
+import CalculateBounds from 'util/CalculateBounds';
 
 import data from 'data';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapView.css';
 
-class CustomMarker extends BaseControl {
-
-  _render() {
-    const {longitude, latitude} = this.props;
-
-    const [x, y] = this._context.viewport.project([longitude, latitude]);
-
-    const markerStyle = {
-      position: 'absolute',
-      background: '#fff',
-      left: x,
-      top: y
-    };
-
-    return (
-      <div ref={this._containerRef}
-        style={markerStyle}>
-        ({longitude}, {latitude})
-      </div>
-    );
-  }
-}
-
 class MapView extends Component<{}, State> {
 
   constructor() {
     super();
 
-    // Calculate initial bounds
-    let bounds = [[180, 90],[-180, -90]];
+    let viewport = CalculateBounds(data); 
 
-    data.map((point, index) => {
-      if (point.position.lng < bounds[0][0]) {
-        bounds[0][0] = point.position.lng;
-      }
-      if (point.position.lat < bounds[0][1]) {
-        bounds[0][1] = point.position.lat;
-      }
-      if (point.position.lng > bounds[1][0]) {
-        bounds[1][0] = point.position.lng;
-      }
-      if (point.position.lat > bounds[1][1]) {
-        bounds[1][1] = point.position.lat;
-      }
+    let countries = data.map((point, index) => {
+      return point.country;
     });
+    let countryGeo = FilterGeoByCountry(countries);
+    console.log(countryGeo);
 
-    const newViewport = new WebMercatorViewport({width: window.innerWidth, height: window.innerHeight});
-    let opts = {
-      padding: 100,
-    };
-    let finalViewport = newViewport.fitBounds(bounds, opts);
+    let mapStyle = fromJS(MapStyle);
+
+    mapStyle = mapStyle
+    .setIn(['sources', 'countries'], fromJS({type: 'geojson', data: countryGeo}))
+    // Add point layer to map
+    .set('layers', mapStyle.get('layers').push(dataLayer));
 
     this.state = {
-      viewport: finalViewport
+      mapStyle: mapStyle,
+      viewport: viewport,
+      countries: []
     };
 
     this.mapboxAccessToken = 'pk.eyJ1IjoieWFuZ2xpLWJzbiIsImEiOiJjangwdmxpbHkwMTd2NDRubzhvNHdxZW04In0.bQ2IgPrUd89S71Y5aeYWGQ';
+    this.updateCountries = this.updateCountries.bind(this);
 
+    /*let points = data.map((point, index) => {
+      return {longitude: point.position.lng, latitude: point.position.lat};
+    });
+    CountryFilter(points, this.updateCountries);*/
   }
 
   componentDidMount() {
     //this.setState({viewport: this.calculateViewport()});
   }
 
-  redraw({project}, position) {
-    const [cx, cy] = project([position.lng, position.lat]);
-    return (
-      <rect x={cx} y={cy} width='30' height='30' style={{strokeWidth: 3, stroke: 'black'}} />
-    );
+  updateCountries(countries) {
+    this.setState({countries: countries});
+    console.log(countries);
   }
 
   render() {
+    let map = this.state.map;
+    let points = data.map((point, index) => {
+      return {longitude: point.position.lng, latitude: point.position.lat};
+    });
+
     return (
       <ReactMapGL
-        mapStyle='mapbox://styles/yangli-bsn/cjx0vo1lk44z81cmbfpbz6u74'
+        mapStyle={this.state.mapStyle}
         mapboxApiAccessToken={this.mapboxAccessToken}
-        {...this.state.viewport}
+        ref={ref => (this.mapRef = ref)}
+        onLoad={() => this.setState({ map: this.mapRef.getMap() })}
         onViewportChange={(viewport) => this.setState({viewport})}
+        {...this.state.viewport}
       >
-        {
-          data.map((point, index) => {
-            return (
-               <CustomMarker
-                longitude={point.position.lng}
-                latitude={point.position.lat}/>
-            );
-          })
-        }
+        {map && (
+          <Cluster
+            map={map}
+            radius={20}
+            extent={512}
+            nodeSize={40}
+            element={clusterProps => (
+              <div style={{backgroundColor: 'white', height: '20px', width: '20px'}} />
+            )}
+          >
+            {/* every item should has a 
+            uniqe key other wise cluster will not rerender on change */}
+            { points.map((point, i) => (
+              <Marker
+                key={i}
+                longitude={point.longitude}
+                latitude={point.latitude}
+              >
+                <div style={{backgroundColor: 'black', height: '20px', width: '20px'}} />
+              </Marker>
+            ))}
+          </Cluster>
+        )}
       </ReactMapGL>
     );
   }
