@@ -1,5 +1,3 @@
-import data from 'data';
-
 import axios from 'axios';
 
 export default function getCountriesWithControllers(positions, callback) {
@@ -11,6 +9,7 @@ export default function getCountriesWithControllers(positions, callback) {
 
 	let finalCountries = [];
 
+	// Mapbox Geocoding API get call
 	positions.forEach((position, index) => {
 		instance.get('/geocoding/v5/mapbox.places/' + position.longitude +',' + position.latitude + '.json', {
 			params: {

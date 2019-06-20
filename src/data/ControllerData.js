@@ -5,7 +5,8 @@ const data = [
 			lat: 37.3541,
 			lng: -121.9552
 		},
-		country: 'United States'
+		country: 'United States',
+		product: 'BCF'
 	},
 	{
 		name: 'San Paulo',
@@ -13,7 +14,8 @@ const data = [
 			lat: -23.533773,
 			lng: -46.625290
 		},
-		country: 'Brazil'
+		country: 'Brazil',
+		product: 'BMF'
 	},
 	{
 		name: 'Hong Kong',
@@ -21,7 +23,8 @@ const data = [
 			lat: 22.28552,
 			lng: 114.15769
 		},
-		country: 'Hong Kong'
+		country: 'Hong Kong',
+		product: 'BCF'
 	},
 	{
 		name: 'Hong Kong2',
@@ -29,7 +32,8 @@ const data = [
 			lat: 23.38552,
 			lng: 113.55769
 		},
-		country: 'China'
+		country: 'China',
+		product: 'BCF'
 	},
 ];
 

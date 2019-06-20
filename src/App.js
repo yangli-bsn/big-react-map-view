@@ -1,7 +1,6 @@
 import React from 'react';
 
 import MapView from 'components/MapView';
-import ListView from 'components/ListView';
 
 import './App.css';
 

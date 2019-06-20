@@ -6,7 +6,7 @@ export const dataLayer = fromJS({
 	'source': 'countries',
 	'layout': {},
 	'paint': {
-		'fill-color': '#088',
+		'fill-color': '#00A0DE',
 		'fill-opacity': 0.8
 	}
 });

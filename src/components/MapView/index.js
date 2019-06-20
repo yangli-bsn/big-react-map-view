@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import ReactMapGL from 'react-map-gl';
 
-import {fromJS} from 'immutable';
+import { Marker, NavigationControl } from 'react-map-gl';
 
-import { SVGOverlay, BaseControl, Marker } from 'react-map-gl';
-import MapStyle from 'data/style.json';
-import { dataLayer } from 'data/dataLayer';
-
-import CustomMarker from './CustomMarker';
-import Cluster from './Cluster';
+import Cluster from 'components/Cluster';
+import SingleControllerMarker from 'components/Markers/SingleControllerMarker';
 
 import CountryFilter from 'util/CountryFilter';
 import FilterGeoByCountry from 'util/FilterGeoByCountry';
-import worldMap from 'data/custom.geo.json';
 import CalculateBounds from 'util/CalculateBounds';
 
-import data from 'data';
+import data from 'data/ControllerData';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapView.css';
@@ -25,20 +20,14 @@ class MapView extends Component<{}, State> {
   constructor() {
     super();
 
+    // Get viewport of existing controller points
     let viewport = CalculateBounds(data); 
 
+    // Determine which country to color
     let countries = data.map((point, index) => {
       return point.country;
     });
-    let countryGeo = FilterGeoByCountry(countries);
-    console.log(countryGeo);
-
-    let mapStyle = fromJS(MapStyle);
-
-    mapStyle = mapStyle
-    .setIn(['sources', 'countries'], fromJS({type: 'geojson', data: countryGeo}))
-    // Add point layer to map
-    .set('layers', mapStyle.get('layers').push(dataLayer));
+    let mapStyle = FilterGeoByCountry(countries);
 
     this.state = {
       mapStyle: mapStyle,
@@ -61,14 +50,10 @@ class MapView extends Component<{}, State> {
 
   updateCountries(countries) {
     this.setState({countries: countries});
-    console.log(countries);
   }
 
   render() {
     let map = this.state.map;
-    let points = data.map((point, index) => {
-      return {longitude: point.position.lng, latitude: point.position.lat};
-    });
 
     return (
       <ReactMapGL
@@ -79,6 +64,12 @@ class MapView extends Component<{}, State> {
         onViewportChange={(viewport) => this.setState({viewport})}
         {...this.state.viewport}
       >
+        {/* Map Zoom Control */}
+        <div style={{position: 'absolute', right: '2vw', bottom: '6vh'}}>
+          <NavigationControl showCompass={false} />
+        </div>
+
+        {/* Controllers and multiple controllers aggregation */}
         {map && (
           <Cluster
             map={map}
@@ -91,17 +82,18 @@ class MapView extends Component<{}, State> {
           >
             {/* every item should has a 
             uniqe key other wise cluster will not rerender on change */}
-            { points.map((point, i) => (
+            { data.map((controller, i) => (
               <Marker
                 key={i}
-                longitude={point.longitude}
-                latitude={point.latitude}
+                longitude={controller.position.lng}
+                latitude={controller.position.lat}
               >
-                <div style={{backgroundColor: 'black', height: '20px', width: '20px'}} />
+                <SingleControllerMarker product={controller.product} />
               </Marker>
             ))}
           </Cluster>
         )}
+
       </ReactMapGL>
     );
   }
