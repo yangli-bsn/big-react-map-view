@@ -4,7 +4,9 @@ import ReactMapGL from 'react-map-gl';
 import { Marker, NavigationControl } from 'react-map-gl';
 
 import Cluster from 'components/Cluster';
+
 import SingleControllerMarker from 'components/Markers/SingleControllerMarker';
+import MultipleControllerMarker from 'components/Markers/MultipleControllerMarker';
 
 import CountryFilter from 'util/CountryFilter';
 import FilterGeoByCountry from 'util/FilterGeoByCountry';
@@ -37,6 +39,7 @@ class MapView extends Component<{}, State> {
 
     this.mapboxAccessToken = 'pk.eyJ1IjoieWFuZ2xpLWJzbiIsImEiOiJjangwdmxpbHkwMTd2NDRubzhvNHdxZW04In0.bQ2IgPrUd89S71Y5aeYWGQ';
     this.updateCountries = this.updateCountries.bind(this);
+    this.changeViewport = this.changeViewport.bind(this);
 
     /*let points = data.map((point, index) => {
       return {longitude: point.position.lng, latitude: point.position.lat};
@@ -50,6 +53,12 @@ class MapView extends Component<{}, State> {
 
   updateCountries(countries) {
     this.setState({countries: countries});
+  }
+
+  changeViewport(viewport) {
+    let newViewport = this.state.viewport;
+    Object.assign(newViewport, viewport)
+    this.setState({viewport: newViewport});
   }
 
   render() {
@@ -77,7 +86,10 @@ class MapView extends Component<{}, State> {
             extent={512}
             nodeSize={40}
             element={clusterProps => (
-              <div style={{backgroundColor: 'white', height: '20px', width: '20px'}} />
+              <MultipleControllerMarker clusterData={clusterProps}
+                                        clusterChildren={clusterProps.data}
+                                        controllerData={data}
+                                        changeViewport={this.changeViewport} />
             )}
           >
             {/* every item should has a 
@@ -87,8 +99,9 @@ class MapView extends Component<{}, State> {
                 key={i}
                 longitude={controller.position.lng}
                 latitude={controller.position.lat}
+                data={controller}
               >
-                <SingleControllerMarker product={controller.product} />
+                <SingleControllerMarker data={controller} />
               </Marker>
             ))}
           </Cluster>

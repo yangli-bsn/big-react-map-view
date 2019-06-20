@@ -12,15 +12,43 @@ class SingleControllerMarker extends Component<{}, State> {
   }
 
   render() {
-  	console.log(this.props.product);
+  	let { errors, warnings, product } = this.props.data;
+
+  	let color = '';
+  	let number = 0;
+
+  	if (errors > 0) {
+  		color = '#F41919';
+  		number = errors;
+  	}
+  	else if (warnings > 0) {
+  		color = '#EEDF18';
+  		number = warnings;
+  	}
+  	else {
+  		color = '#34E817';
+  		number = 0;
+  	}
+
   	return (
   		<div className='single-marker'>
-  			{this.props.product === 'BCF' &&
-  				<BCFIcon className='bcf-marker-svg' />
+  			{product === 'BCF' &&
+  				<div className='bcf-marker'>
+  					<BCFIcon className='bcf-marker-svg' fill={color} />
+  					<div className='bcf-number'>
+						{number}
+					</div>
+				</div>
   			}
-  			{this.props.product === 'BMF' &&
-  				<BMFIcon className='bmf-marker-svg' />
+  			{product === 'BMF' &&
+  				<div className='bmf-marker'>
+  					<BMFIcon className='bmf-marker-svg' fill={color} />
+  					<div className='bmf-number'>
+						{number}
+					</div>
+				</div>
   			}
+  			
   		</div>
   	);
   }

@@ -1,0 +1,68 @@
+import React, { Component } from 'react';
+
+import './Markers.css';
+
+class MultipleControllerMarker extends Component<{}, State> {
+
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    const clusterId = this.props.clusterData.cluster.properties.cluster_id;
+    const superCluster = this.props.clusterData.superCluster;
+    const zoomLevel = superCluster.getClusterExpansionZoom(clusterId);
+
+    const cluster = this.props.clusterData.cluster;
+
+    const lng = cluster.geometry.coordinates[0];
+    const lat = cluster.geometry.coordinates[1];
+
+    this.props.changeViewport({zoom: zoomLevel, longitude: lng, latitude: lat });
+  }
+
+  render() {
+    let { controllerData, clusterChildren } = this.props;
+
+  	let errors = 0
+    let warnings = 0;
+    let number = 0;
+
+    clusterChildren.forEach((child, index) => {
+      let controller = controllerData[child.properties.key];
+      if (controller.errors > errors) {
+        errors = controller.errors;
+      }
+      if (controller.warnings > warnings) {
+        warnings = controller.warnings;
+      }
+    });
+
+  	let color = '';
+
+  	if (errors > 0) {
+  		color = '#F41919';
+      number = errors;
+  	}
+  	else if (warnings > 0) {
+  		color = '#EEDF18';
+      number = warnings;
+  	}
+  	else {
+  		color = '#34E817';
+      number = 0;
+  	}
+
+  	return (
+  		<div className='multiple-controller'
+            style={{backgroundColor: color}}
+            onClick={this.handleClick}>
+  		  {number}
+  		</div>
+  	);
+  }
+}
+
+export default MultipleControllerMarker;

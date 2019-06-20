@@ -1,7 +1,20 @@
 .single-marker {
+	height: 45px;
+	width: 45px;
+	/* Need to translate the marker by -45/2, -45 (-height / 2, -width) to the right place */
+	transform: translate(-22.5px,-45px);
+}
+
+.multiple-controller {
 	height: 40px;
 	width: 40px;
-
+	box-shadow:  1px 1px 2px rgba(0, 0, 0, .7);
+	font-size: 25px;
+	text-align: center;
+	line-height: 40px;
+	/* Need to translate the marker by -40/2, -40 (-height / 2, -width) to the right place */
+	transform: translate(-20px,-40px);
+	cursor: pointer;
 }
 
 .bcf-marker-svg {
@@ -13,4 +26,21 @@
 .bmf-marker-svg {
 	height: 100%;
 	width: 100%;
+	filter: drop-shadow( 1px 1px 2px rgba(0, 0, 0, .7));
+}
+
+.bmf-number {
+	position: absolute;
+	left: 17px;
+	top: 20px;
+	font-size: 20px;
+	text-align: center;
+}
+
+.bcf-number {
+	position: absolute;
+	left: 16px;
+	top: 13px;
+	font-size: 20px;
+	text-align: center;
 }

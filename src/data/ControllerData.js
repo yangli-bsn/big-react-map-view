@@ -6,7 +6,9 @@ const data = [
 			lng: -121.9552
 		},
 		country: 'United States',
-		product: 'BCF'
+		product: 'BCF',
+		errors: 0,
+		warnings: 0
 	},
 	{
 		name: 'San Paulo',
@@ -15,7 +17,9 @@ const data = [
 			lng: -46.625290
 		},
 		country: 'Brazil',
-		product: 'BMF'
+		product: 'BMF',
+		errors: 2,
+		warnings: 3
 	},
 	{
 		name: 'Hong Kong',
@@ -24,7 +28,9 @@ const data = [
 			lng: 114.15769
 		},
 		country: 'Hong Kong',
-		product: 'BCF'
+		product: 'BCF',
+		errors: 2,
+		warnings: 0
 	},
 	{
 		name: 'Hong Kong2',
@@ -33,7 +39,31 @@ const data = [
 			lng: 113.55769
 		},
 		country: 'China',
-		product: 'BCF'
+		product: 'BCF',
+		errors: 0,
+		warnings: 3
+	},
+	{
+		name: 'Sydney',
+		position: {
+			lat: -33.865143,
+			lng: 151.209900
+		},
+		country: 'Australia',
+		product: 'BMF',
+		errors: 0,
+		warnings: 0
+	},
+	{
+		name: 'London',
+		position: {
+			lat: 51.509865,
+			lng: -0.118092
+		},
+		country: 'United Kingdom',
+		product: 'BCF',
+		errors: 0,
+		warnings: 2
 	},
 ];
 
