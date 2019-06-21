@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactTooltip from 'react-tooltip';
 
+import Tooltip from 'components/Tooltip';
+
 import './Markers.css';
 
 class MultipleControllerMarker extends Component<{}, State> {
@@ -8,7 +10,21 @@ class MultipleControllerMarker extends Component<{}, State> {
   constructor(props) {
     super(props);
 
+    this.state = {
+      hover: false
+    };
+
     this.handleClick = this.handleClick.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+  }
+
+  handleMouseEnter() {
+    this.setState({hover: true});
+  }
+
+  handleMouseLeave() {
+    this.setState({hover: false});
   }
 
   handleClick() {
@@ -61,9 +77,11 @@ class MultipleControllerMarker extends Component<{}, State> {
   		<div className='multiple-controller'
             data-tip='hello world'
             style={{backgroundColor: color}}
-            onClick={this.handleClick}>
+            onClick={this.handleClick}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}>
   		  {number}
-        <ReactTooltip />
+        <Tooltip active={this.state.hover} />
   		</div>
   	);
   }
