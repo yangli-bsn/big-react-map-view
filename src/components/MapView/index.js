@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactMapGL from 'react-map-gl';
 
-import { Marker, NavigationControl } from 'react-map-gl';
+import { Marker, NavigationControl, FlyToInterpolator } from 'react-map-gl';
 
 import Cluster from 'components/Cluster';
 
@@ -57,7 +57,12 @@ class MapView extends Component<{}, State> {
 
   changeViewport(viewport) {
     let newViewport = this.state.viewport;
-    Object.assign(newViewport, viewport)
+    Object.assign(newViewport, viewport);
+
+    // Flyto animation
+    newViewport.transitionDuration = 500;
+    newViewport.transitionInterpolator = new FlyToInterpolator();
+
     this.setState({viewport: newViewport});
   }
 

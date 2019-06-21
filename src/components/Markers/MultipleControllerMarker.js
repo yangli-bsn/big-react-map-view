@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
 
 import './Markers.css';
 
@@ -13,7 +14,8 @@ class MultipleControllerMarker extends Component<{}, State> {
   handleClick() {
     const clusterId = this.props.clusterData.cluster.properties.cluster_id;
     const superCluster = this.props.clusterData.superCluster;
-    const zoomLevel = superCluster.getClusterExpansionZoom(clusterId);
+    // Add 0.1 to make sure the zoom level is high enough to decompose
+    const zoomLevel = superCluster.getClusterExpansionZoom(clusterId) + 0.1;
 
     const cluster = this.props.clusterData.cluster;
 
@@ -57,9 +59,11 @@ class MultipleControllerMarker extends Component<{}, State> {
 
   	return (
   		<div className='multiple-controller'
+            data-tip='hello world'
             style={{backgroundColor: color}}
             onClick={this.handleClick}>
   		  {number}
+        <ReactTooltip />
   		</div>
   	);
   }
